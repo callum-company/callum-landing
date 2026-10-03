@@ -1,0 +1,18 @@
+{
+  "name": "callumc",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev:web": "pnpm --filter web dev",
+    "dev:dash": "pnpm --filter dashboard dev",
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r build",
+    "build:web": "pnpm --filter web build",
+    "build:dash": "pnpm --filter dashboard build",
+    "lint": "pnpm -r lint",
+    "db:generate": "pnpm --filter @callumc/db generate",
+    "db:migrate": "pnpm --filter @callumc/db migrate",
+    "db:seed": "pnpm --filter @callumc/db seed",
+    "db:seed:demo": "pnpm --filter @callumc/db seed:demo"
+  }
+}
