@@ -45,13 +45,16 @@ const SWATCHES: (string | null)[] = [
   "oklch(0.63 0.2 0)",
 ];
 
-/** Re-points the brand tokens for the mock subtree only (pure CSS, no re-render cost). */
+/**
+ * Re-points the brand tokens for the mock subtree only (pure CSS, no re-render cost).
+ * globals.css uses `@theme inline`, so utilities read `--brand*` directly, not `--color-brand*`.
+ */
 function swatchStyle(c: string | null): CSSProperties {
   if (!c) return {};
   return {
-    "--color-brand": c,
-    "--color-brand-2": `color-mix(in oklch, ${c} 70%, white)`,
-    "--color-brand-3": `color-mix(in oklch, ${c} 75%, black)`,
+    "--brand": c,
+    "--brand-2": `color-mix(in oklch, ${c} 70%, white)`,
+    "--brand-3": `color-mix(in oklch, ${c} 75%, black)`,
   } as CSSProperties;
 }
 
