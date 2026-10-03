@@ -98,9 +98,14 @@ export function Niches() {
           <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-brand-3 via-brand to-brand-2 text-sm font-bold text-white">
             {name.charAt(0).toUpperCase()}
           </span>
-          <span className="line-clamp-2 leading-tight font-semibold">{name}</span>
+          <span className={cn("line-clamp-2 leading-tight font-semibold break-words", mobile && "text-[15px]")}>{name}</span>
         </span>
-        <span className="shrink-0 rounded-full bg-brand px-3 py-1.5 text-xs font-medium text-white">
+        <span
+          className={cn(
+            "shrink-0 rounded-full bg-brand font-medium text-white",
+            mobile ? "px-2.5 py-1 text-[11px]" : "px-3 py-1.5 text-xs",
+          )}
+        >
           {family.action}
         </span>
       </div>
@@ -446,7 +451,7 @@ function StorePreview({ samples, compact }: PreviewProps) {
                 i % 3 === 0 ? "from-brand/30 to-brand-2/10" : i % 3 === 1 ? "from-brand-2/30 to-brand/10" : "from-brand-3/30 to-brand/5",
               )}
             />
-            <p className="mt-1.5 truncate text-[11px] font-medium">{s}</p>
+            <p className="mt-1.5 line-clamp-2 min-h-[2.5em] text-[11px] leading-tight font-medium">{s}</p>
             <div className="mt-1 flex items-center justify-between gap-1">
               <span className="text-[11px] text-muted-foreground tabular-nums">{rupiah(prices[i])}</span>
               <button
@@ -695,8 +700,8 @@ function MarketplacePreview({ samples }: PreviewProps) {
               )}
             />
             <span className="min-w-0 flex-1">
-              <span className="flex items-center gap-1.5 text-xs font-semibold">
-                <span className="truncate">{s}</span>
+              <span className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs font-semibold">
+                <span>{s}</span>
                 {i === 0 && <span className="rounded-full bg-brand/10 px-1.5 py-0.5 text-[11px] font-medium text-brand">{ui.featured}</span>}
               </span>
               <span className="mt-1 flex gap-0.5" aria-hidden>
@@ -821,8 +826,9 @@ function PosPreview({ samples }: PreviewProps) {
     <div className="space-y-3">
       <div className={cn(card, "divide-y divide-border px-3")}>
         {samples.map((s, i) => (
-          <div key={s} className="flex items-center justify-between gap-2 py-2 text-xs">
-            <span className="min-w-0 flex-1 truncate">{s}</span>
+          <div key={s} className="py-2.5 text-xs">
+            <p className="font-medium">{s}</p>
+            <div className="mt-1.5 flex items-center justify-between gap-2">
             <span className="inline-flex items-center gap-2">
               <button type="button" aria-label={`${ui.less} ${s}`} onClick={() => bump(i, -1)} className={cn(tap, "grid size-8 place-items-center rounded-full bg-secondary")}>
                 <Minus className="size-3" />
@@ -832,7 +838,8 @@ function PosPreview({ samples }: PreviewProps) {
                 <Plus className="size-3" />
               </button>
             </span>
-            <span className="w-20 text-right tabular-nums text-muted-foreground">{rupiah(prices[i] * qty[i])}</span>
+            <span className="tabular-nums text-muted-foreground">{rupiah(prices[i] * qty[i])}</span>
+            </div>
           </div>
         ))}
       </div>
@@ -841,11 +848,11 @@ function PosPreview({ samples }: PreviewProps) {
         <span className="tabular-nums">{rupiah(total)}</span>
         <span role="status" aria-atomic="true" className="sr-only">{`${ui.total} ${rupiah(total)}`}</span>
       </div>
-      <div className="flex items-center gap-2">
-        <span className="inline-flex min-w-0 flex-1 items-center gap-1.5 rounded-xl bg-amber-500/10 px-3 py-2 text-[11px] font-medium text-amber-600 dark:text-amber-400">
-          <CircleAlert className="size-3.5 shrink-0" /> <span className="truncate">{ui.lowStock}: {samples[1]}</span>
+      <div className="flex flex-wrap items-stretch gap-2">
+        <span className="inline-flex min-w-[9rem] flex-1 items-center gap-1.5 rounded-xl bg-amber-500/10 px-3 py-2 text-[11px] font-medium text-amber-600 dark:text-amber-400">
+          <CircleAlert className="size-3.5 shrink-0" /> {ui.lowStock}: {samples[1]}
         </span>
-        <span className="rounded-xl bg-brand px-4 py-2 text-xs font-medium text-white">{ui.pay}</span>
+        <span className="grid place-items-center rounded-xl bg-brand px-4 py-2 text-xs font-medium text-white">{ui.pay}</span>
       </div>
     </div>
   );
