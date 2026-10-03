@@ -996,9 +996,9 @@ export const en = {
       },
       {
         name: "Alessandro Fathi Zulkarnain",
-        role: "Office Boy (OB)",
-        bio: "The only non-senior on the team, unless you count coffee. Keeps the water cooler full and the office Wi-Fi alive through every deadline. The one bug he can't fix: the team's mood right before lunch.",
-        tags: ["Coffee", "Water cooler", "Turning it off and on again", "Team morale"],
+        role: "Marketing",
+        bio: "Handles marketing: social media, content, and campaigns that help more businesses find Callum C.",
+        tags: ["Social media", "Content", "Campaigns", "Branding"],
       },
       {
         name: "Gerrard Setiawan",
@@ -2020,9 +2020,9 @@ export const id: Dict = {
       },
       {
         name: "Alessandro Fathi Zulkarnain",
-        role: "Office Boy (OB)",
-        bio: "Satu-satunya anggota tim yang tidak senior, kecuali soal kopi. Memastikan galon tidak pernah kosong dan Wi-Fi kantor tetap hidup di setiap deadline. Satu-satunya bug yang belum bisa ia perbaiki: mood tim menjelang jam makan siang.",
-        tags: ["Kopi", "Galon", "Cabut-colok ulang", "Mood tim"],
+        role: "Marketing",
+        bio: "Memegang pemasaran: media sosial, konten, dan kampanye agar lebih banyak bisnis mengenal Callum C.",
+        tags: ["Media sosial", "Konten", "Kampanye", "Branding"],
       },
       {
         name: "Gerrard Setiawan",
