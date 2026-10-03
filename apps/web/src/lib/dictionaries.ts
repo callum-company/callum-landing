@@ -712,6 +712,7 @@ export const en = {
       following: "Following",
       selected: "Selected",
       ask: "Ask",
+      restart: "Start over",
     },
   },
   faq: {
@@ -1736,6 +1737,7 @@ export const id: Dict = {
       following: "Diikuti",
       selected: "Dipilih",
       ask: "Tanya",
+      restart: "Ulangi percakapan",
     },
   },
   faq: {

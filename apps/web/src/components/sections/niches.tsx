@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   ArrowRight,
@@ -682,8 +682,21 @@ function AiPreview({ samples }: PreviewProps) {
   const ui = useDict().niches.ui;
   const reduce = useReducedMotion();
   const [q1, a1, q2] = samples;
-  // Scripted conversation: each tapped question appends its question + answer.
+  // Scripted conversation: each question can be asked once; "start over" resets.
   const [asked, setAsked] = useState<number[]>([0]);
+  const logRef = useRef<HTMLDivElement>(null);
+
+  // Keep the newest message in view: once now, once after the bot's delayed reply renders.
+  useEffect(() => {
+    const el = logRef.current;
+    if (!el) return;
+    const toBottom = () => el.scrollTo({ top: el.scrollHeight, behavior: reduce ? "auto" : "smooth" });
+    toBottom();
+    const id = setTimeout(toBottom, 300);
+    return () => clearTimeout(id);
+  }, [asked, reduce]);
+
+  const remaining = [0, 1].filter((i) => !asked.includes(i));
   const thread: { me: boolean; node: ReactNode }[] = [];
   for (const q of asked) {
     thread.push({ me: true, node: q === 0 ? q1 : q2 });
@@ -701,7 +714,11 @@ function AiPreview({ samples }: PreviewProps) {
   }
   return (
     <div className="space-y-2.5 text-xs">
-      <div role="log" className="max-h-56 space-y-2.5 overflow-y-auto">
+      <div
+        ref={logRef}
+        role="log"
+        className="max-h-56 space-y-2.5 overflow-y-auto overscroll-contain pr-1 [scrollbar-color:var(--border)_transparent] [scrollbar-width:thin] [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border"
+      >
         {thread.map((m, i) => (
           <motion.div
             key={i}
@@ -724,16 +741,25 @@ function AiPreview({ samples }: PreviewProps) {
         ))}
       </div>
       <div className="flex flex-wrap gap-1.5 border-t border-border pt-2.5">
-        {[q1, q2].map((q, i) => (
+        {remaining.map((i) => (
           <button
-            key={q}
+            key={i}
             type="button"
-            onClick={() => setAsked((a) => [...a, i].slice(-4))}
-            className={cn(tap, "rounded-full border border-brand/40 bg-brand/5 px-3 py-1.5 text-[11px] font-medium text-brand hover:bg-brand/10")}
+            onClick={() => setAsked((a) => [...a, i])}
+            className={cn(tap, "min-h-8 rounded-full border border-brand/40 bg-brand/5 px-3 py-1.5 text-left text-[11px] font-medium text-brand hover:bg-brand/10")}
           >
-            {ui.ask}: {q}
+            {ui.ask}: {i === 0 ? q1 : q2}
           </button>
         ))}
+        {remaining.length === 0 && (
+          <button
+            type="button"
+            onClick={() => setAsked([0])}
+            className={cn(tap, "min-h-8 rounded-full border border-border px-3 py-1.5 text-[11px] font-medium text-muted-foreground hover:text-foreground")}
+          >
+            {ui.restart}
+          </button>
+        )}
       </div>
     </div>
   );
