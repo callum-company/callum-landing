@@ -17,6 +17,9 @@ import {
   Plus,
   Server,
   ShoppingCart,
+  Signal,
+  BatteryFull,
+  Wifi,
   Smartphone,
   Sparkles,
   Star,
@@ -87,6 +90,44 @@ export function Niches() {
     track("niche_pick", t.niches.families[i].name);
   };
 
+  // The mock app screen, shown inside either the phone frame or the browser window.
+  const screen = (
+    <>
+      <div className="flex items-center justify-between gap-3 px-4 pt-4 sm:px-5 sm:pt-5">
+        <span className="flex min-w-0 items-center gap-2.5">
+          <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-brand-3 via-brand to-brand-2 text-sm font-bold text-white">
+            {name.charAt(0).toUpperCase()}
+          </span>
+          <span className="line-clamp-2 leading-tight font-semibold">{name}</span>
+        </span>
+        <span className="shrink-0 rounded-full bg-brand px-3 py-1.5 text-xs font-medium text-white">
+          {family.action}
+        </span>
+      </div>
+      <p className="px-4 pt-2 text-sm text-muted-foreground sm:px-5">{family.tagline}</p>
+
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={fi}
+          initial={{ opacity: 0, y: reduce ? 0 : 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25, ease: EASE }}
+          className="min-h-[21rem] p-4 sm:p-5"
+        >
+          {/* keyed by family: each preview's local state resets on switch */}
+          <Preview
+            kind={nicheMeta[fi].preview}
+            samples={family.samples}
+            action={family.action}
+            niche={niche}
+            compact={mobile}
+          />
+        </motion.div>
+      </AnimatePresence>
+    </>
+  );
+
   return (
     <Section id="niche">
       <SectionHeading
@@ -149,20 +190,17 @@ export function Niches() {
             </div>
           </div>
 
-          <div
-            role="group"
-            aria-label={t.niches.previewLabel}
-            style={swatchStyle(SWATCHES[swatch])}
-            className={cn(
-              "mx-auto overflow-hidden border border-border bg-card shadow-elevated transition-[max-width,border-radius] duration-300",
-              mobile ? "max-w-[340px] rounded-[2rem] border-4" : "max-w-full rounded-2xl",
-            )}
-          >
-            {mobile ? (
-              <div className="flex justify-center pt-2" aria-hidden>
-                <span className="h-1.5 w-16 rounded-full bg-border" />
-              </div>
-            ) : (
+          {mobile ? (
+            <PhoneFrame label={t.niches.previewLabel} style={swatchStyle(SWATCHES[swatch])}>
+              {screen}
+            </PhoneFrame>
+          ) : (
+            <div
+              role="group"
+              aria-label={t.niches.previewLabel}
+              style={swatchStyle(SWATCHES[swatch])}
+              className="mx-auto overflow-hidden rounded-2xl border border-border bg-card shadow-elevated"
+            >
               <div className="flex items-center gap-3 border-b border-border bg-secondary/50 px-4 py-2.5" aria-hidden>
                 <span className="flex gap-1.5">
                   <span className="size-2.5 rounded-full bg-red-400/80" />
@@ -173,41 +211,9 @@ export function Niches() {
                   {slug(name) || "bisnisanda"}.com
                 </span>
               </div>
-            )}
-
-            <div className="flex items-center justify-between gap-3 px-4 pt-4 sm:px-5 sm:pt-5">
-              <span className="flex min-w-0 items-center gap-2.5">
-                <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-brand-3 via-brand to-brand-2 text-sm font-bold text-white">
-                  {name.charAt(0).toUpperCase()}
-                </span>
-                <span className="truncate font-semibold">{name}</span>
-              </span>
-              <span className="shrink-0 rounded-full bg-brand px-3 py-1.5 text-xs font-medium text-white">
-                {family.action}
-              </span>
+              {screen}
             </div>
-            <p className="px-4 pt-2 text-sm text-muted-foreground sm:px-5">{family.tagline}</p>
-
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div
-                key={fi}
-                initial={{ opacity: 0, y: reduce ? 0 : 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.25, ease: EASE }}
-                className="min-h-[21rem] p-4 sm:p-5"
-              >
-                {/* keyed by family: each preview's local state resets on switch */}
-                <Preview
-                  kind={nicheMeta[fi].preview}
-                  samples={family.samples}
-                  action={family.action}
-                  niche={niche}
-                  compact={mobile}
-                />
-              </motion.div>
-            </AnimatePresence>
-          </div>
+          )}
           <p className="mt-3 flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
             <Sparkles className="size-3.5" />
             {t.niches.previewLabel}
@@ -301,6 +307,46 @@ export function Niches() {
         </div>
       </Reveal>
     </Section>
+  );
+}
+
+/**
+ * Modern-phone frame in pure CSS: titanium-style rim, side buttons, island,
+ * status bar, home indicator, 19.5:9 screen. The app content scrolls inside.
+ */
+function PhoneFrame({ label, style, children }: { label: string; style: CSSProperties; children: ReactNode }) {
+  const btn = "absolute w-[3px] bg-gradient-to-b from-zinc-500 to-zinc-700";
+  return (
+    <div role="group" aria-label={label} style={style} className="relative mx-auto w-full max-w-[300px]">
+      <span aria-hidden className={cn(btn, "-left-[2px] top-[17%] h-7 rounded-l")} />
+      <span aria-hidden className={cn(btn, "-left-[2px] top-[25%] h-12 rounded-l")} />
+      <span aria-hidden className={cn(btn, "-left-[2px] top-[34%] h-12 rounded-l")} />
+      <span aria-hidden className={cn(btn, "-right-[2px] top-[27%] h-16 rounded-r")} />
+      <div className="rounded-[3.3rem] bg-gradient-to-br from-zinc-400 via-zinc-600 to-zinc-800 p-[3px] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.55)]">
+        <div className="rounded-[3.15rem] bg-black p-[9px]">
+          <div className="relative aspect-[9/19.5] overflow-hidden rounded-[2.65rem] bg-card">
+            <div aria-hidden className="absolute inset-x-0 top-0 z-10 flex h-11 items-center justify-between px-7 text-[12px] font-semibold">
+              <span className="tabular-nums">9:41</span>
+              <span className="flex items-center gap-1">
+                <Signal className="size-3.5" />
+                <Wifi className="size-3.5" />
+                <BatteryFull className="size-4" />
+              </span>
+            </div>
+            <div aria-hidden className="absolute top-2.5 left-1/2 z-20 h-[26px] w-[86px] -translate-x-1/2 rounded-full bg-black" />
+            <div className="absolute inset-x-0 top-11 bottom-0 overflow-y-auto overscroll-contain pb-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {children}
+            </div>
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex h-8 items-end justify-center bg-gradient-to-t from-card via-card/80 to-transparent pb-2"
+            >
+              <span className="h-[5px] w-28 rounded-full bg-foreground/80" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -567,11 +613,11 @@ function BookingPreview({ samples, niche, action }: PreviewProps) {
           </button>
         ))}
       </div>
-      <div className="flex items-center justify-between gap-2 rounded-xl bg-brand px-3.5 py-2.5 text-xs font-medium text-white">
-        <span className="truncate tabular-nums">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-0.5 rounded-xl bg-brand px-3.5 py-2.5 text-xs font-medium text-white">
+        <span className="tabular-nums">
           {day + 1} · {slots[slot]} · {samples[staff]}
         </span>
-        <span className="shrink-0">
+        <span>
           {action} · {ui.deposit} {rupiah(50_000)}
         </span>
       </div>
