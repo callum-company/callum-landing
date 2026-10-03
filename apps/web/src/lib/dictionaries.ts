@@ -996,13 +996,13 @@ export const en = {
       },
       {
         name: "Alessandro Fathi Zulkarnain",
-        role: "Marketing",
+        role: "Founder & Marketing",
         bio: "Handles marketing: social media, content, and campaigns that help more businesses find Callum C.",
         tags: ["Social media", "Content", "Campaigns", "Branding"],
       },
       {
         name: "Gerrard Setiawan",
-        role: "Co-Founder & Creative Director",
+        role: "Founder & Creative Director",
         bio: "Leads brand, interface, and motion. Believes the smallest details are what make a product feel inevitable.",
         tags: ["Brand", "UI/UX", "Motion", "Design systems"],
       },
@@ -2020,13 +2020,13 @@ export const id: Dict = {
       },
       {
         name: "Alessandro Fathi Zulkarnain",
-        role: "Marketing",
+        role: "Founder & Marketing",
         bio: "Memegang pemasaran: media sosial, konten, dan kampanye agar lebih banyak bisnis mengenal Callum C.",
         tags: ["Media sosial", "Konten", "Kampanye", "Branding"],
       },
       {
         name: "Gerrard Setiawan",
-        role: "Co-Founder & Creative Director",
+        role: "Founder & Creative Director",
         bio: "Memimpin brand, desain antarmuka, dan motion. Percaya bahwa detail kecillah yang membuat sebuah produk terasa istimewa.",
         tags: ["Brand", "UI/UX", "Motion", "Design system"],
       },
